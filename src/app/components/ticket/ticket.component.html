@@ -1,0 +1,65 @@
+<!-- src/app/components/ticket/ticket.component.html -->
+<div class="container mt-4">
+    <button class="btn btn-primary mb-4" (click)="open(content)">Create New Ticket</button>
+    <div class="row" *ngFor="let ticket of tickets">
+        <div class="col-12 mb-3">
+            <div class="card" [ngStyle]="{'background-color': getColor(ticket)}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ ticket.phoneNumber }}</h5>
+                    <p class="card-text">{{ ticket.governorate }}, {{ ticket.city }}, {{ ticket.district }}</p>
+                    <p class="card-text">{{ ticket.creationDateTime | date: 'short' }}</p>
+                    <button class="btn btn-success" (click)="handleTicket(ticket.id)"
+                        *ngIf="!ticket.isHandled">Handle</button>
+                    <p *ngIf="ticket.isHandled">Handled</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" [class.disabled]="pageNumber === 1">
+                <a class="page-link" href="#" (click)="pageNumber = pageNumber - 1; loadTickets()">Previous</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#" (click)="pageNumber = pageNumber + 1; loadTickets()">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Create Ticket</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="mb-3">
+                <label for="phoneNumber" class="form-label">Phone Number</label>
+                <input type="text" class="form-control" id="phoneNumber" [(ngModel)]="newTicket.phoneNumber"
+                    name="phoneNumber">
+            </div>
+            <div class="mb-3">
+                <label for="governorate" class="form-label">Governorate</label>
+                <select class="form-control" id="governorate" [(ngModel)]="newTicket.governorate" name="governorate">
+                    <option *ngFor="let governorate of governorates" [value]="governorate">{{ governorate }}</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="city" class="form-label">City</label>
+                <select class="form-control" id="city" [(ngModel)]="newTicket.city" name="city">
+                    <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="district" class="form-label">District</label>
+                <select class="form-control" id="district" [(ngModel)]="newTicket.district" name="district">
+                    <option *ngFor="let district of districts" [value]="district">{{ district }}</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="modal.close()">Save</button>
+    </div>
+</ng-template>
